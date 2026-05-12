@@ -826,12 +826,11 @@ public class PlatinumSludgeOverHaul {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void replacePureElements() {
-        // Cache the ItemList.values() call
-        final ItemList[] values = ItemList.values();
-        final ArrayList<ItemStack> ITEMLIST_VALUES = new ArrayList<>(values.length);
-        for (ItemList e : values) {
-            if (e.hasBeenSet()) {
-                ITEMLIST_VALUES.add(e.get(1));
+        final ItemList[] itemList = ItemList.values();
+        final ArrayList<ItemStack> availableItemList = new ArrayList<>(itemList.length);
+        for (ItemList item : itemList) {
+            if (item.hasBeenSet()) {
+                availableItemList.add(item.get(1));
             }
         }
 
@@ -860,7 +859,7 @@ public class PlatinumSludgeOverHaul {
 
             Werkstoff mat = (ass.mMaterial.mMaterial.equals(Materials.Platinum)) ? PTMetallicPowder : PDMetallicPowder;
 
-            if (PlatinumSludgeOverHaul.isInBlackList((ItemStack) realEntry.getKey(), ITEMLIST_VALUES)) continue;
+            if (PlatinumSludgeOverHaul.isInBlackList((ItemStack) realEntry.getKey(), availableItemList)) continue;
             realEntry.setValue(mat.get(prefix, stack.stackSize * 2));
         }
         // vanilla crafting
@@ -914,7 +913,7 @@ public class PlatinumSludgeOverHaul {
                         || BWUtil.areStacksEqualOrNull(Ruthenium.get(dustPure), recipe.mOutputs[i]))
                         && !BWUtil.areStacksEqualOrNull(Ruthenium.get(ingot), recipe.mInputs[0])) {
                         for (ItemStack mInput : recipe.mInputs)
-                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES)) continue recipeloop;
+                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList)) continue recipeloop;
                         int amount = recipe.mOutputs[i].stackSize * 2;
                         GTLog.err.println("Recipe edited: " + displayRecipe(recipe));
                         recipe.mOutputs[i] = LeachResidue.get(dust, amount);
@@ -925,7 +924,7 @@ public class PlatinumSludgeOverHaul {
                         || BWUtil.areStacksEqualOrNull(Rhodium.get(dustPure), recipe.mOutputs[i]))
                         && !BWUtil.areStacksEqualOrNull(Rhodium.get(ingot), recipe.mInputs[0])) {
                         for (ItemStack mInput : recipe.mInputs)
-                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES)) continue recipeloop;
+                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList)) continue recipeloop;
                         int amount = recipe.mOutputs[i].stackSize * 2;
                         GTLog.err.println("Recipe edited: " + displayRecipe(recipe));
                         recipe.mOutputs[i] = CrudeRhMetall.get(dust, amount);
@@ -936,7 +935,7 @@ public class PlatinumSludgeOverHaul {
                     if (GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mMaterial.mMaterial
                         .equals(Materials.Platinum)) {
                         for (ItemStack mInput : recipe.mInputs) {
-                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES)) continue recipeloop;
+                            if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList)) continue recipeloop;
                         }
                         if (dust.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
                             || dustImpure.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
@@ -959,7 +958,7 @@ public class PlatinumSludgeOverHaul {
                     } else if (GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mMaterial.mMaterial
                         .equals(Materials.Palladium)) {
                             for (ItemStack mInput : recipe.mInputs) {
-                                if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES)) continue recipeloop;
+                                if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList)) continue recipeloop;
                             }
                             if (dust.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
                                 || dustImpure.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
@@ -986,7 +985,7 @@ public class PlatinumSludgeOverHaul {
                         } else if (GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mMaterial.mMaterial
                             .equals(Materials.Osmium)) {
                                 for (ItemStack mInput : recipe.mInputs) {
-                                    if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES))
+                                    if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList))
                                         continue recipeloop;
                                 }
                                 if (dust.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
@@ -1015,7 +1014,7 @@ public class PlatinumSludgeOverHaul {
                             } else if (GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mMaterial.mMaterial
                                 .equals(Materials.Iridium)) {
                                     for (ItemStack mInput : recipe.mInputs) {
-                                        if (PlatinumSludgeOverHaul.isInBlackList(mInput, ITEMLIST_VALUES))
+                                        if (PlatinumSludgeOverHaul.isInBlackList(mInput, availableItemList))
                                             continue recipeloop;
                                     }
                                     if (dust.equals(GTOreDictUnificator.getAssociation(recipe.mOutputs[i]).mPrefix)
@@ -1145,7 +1144,7 @@ public class PlatinumSludgeOverHaul {
         return false;
     }
 
-    private static boolean isInBlackList(ItemStack stack, List<ItemStack> ITEMLIST_VALUES) {
+    private static boolean isInBlackList(ItemStack stack, List<ItemStack> availableItemList) {
         if (stack == null || stack.getItem() instanceof BWMetaGeneratedItems
             || MainMod.MOD_ID.equals(GameRegistry.findUniqueIdentifierFor(stack.getItem()).modId)
             || BartWorksCrossmod.MOD_ID.equals(GameRegistry.findUniqueIdentifierFor(stack.getItem()).modId))
@@ -1161,7 +1160,7 @@ public class PlatinumSludgeOverHaul {
         if (Block.getBlockFromItem(stack.getItem()) instanceof GTGenericBlock
             && !(Block.getBlockFromItem(stack.getItem()) instanceof GTBlockOre)) return true;
 
-        for (ItemStack itemStack : ITEMLIST_VALUES) {
+        for (ItemStack itemStack : availableItemList) {
             if (!BWUtil.checkStackAndPrefix(stack) && GTUtility.areStacksEqual(itemStack, stack, true)) {
                 return true;
             }
