@@ -836,16 +836,15 @@ public class PlatinumSludgeOverHaul {
         }
 
         // furnace
-        for (Object entry : FurnaceRecipes.smelting()
+        for (Map.Entry<ItemStack, ItemStack> entry : FurnaceRecipes.smelting()
             .getSmeltingList()
             .entrySet()) {
-            Map.Entry realEntry = (Map.Entry) entry;
-            if (!GTUtility.isStackValid(realEntry.getKey())) continue;
-            if (!BWUtil.checkStackAndPrefix((ItemStack) realEntry.getKey())) continue;
+            if (!GTUtility.isStackValid(entry.getKey())) continue;
+            if (!BWUtil.checkStackAndPrefix(entry.getKey())) continue;
 
-            ItemData association = GTOreDictUnificator.getAssociation((ItemStack) realEntry.getKey());
+            ItemData association = GTOreDictUnificator.getAssociation(entry.getKey());
             boolean isDust = dust.equals(association.mPrefix) || dustTiny.equals(association.mPrefix);
-            ItemStack stack = (ItemStack) realEntry.getValue();
+            ItemStack stack = entry.getValue();
             if (isDust && association.mMaterial.mMaterial.equals(Materials.Platinum)) continue;
 
             if (!GTUtility.isStackValid(stack)) continue;
@@ -860,8 +859,8 @@ public class PlatinumSludgeOverHaul {
 
             Werkstoff mat = (ass.mMaterial.mMaterial.equals(Materials.Platinum)) ? PTMetallicPowder : PDMetallicPowder;
 
-            if (PlatinumSludgeOverHaul.isInBlackList((ItemStack) realEntry.getKey(), availableItemList)) continue;
-            realEntry.setValue(mat.get(prefix, stack.stackSize * 2));
+            if (PlatinumSludgeOverHaul.isInBlackList(entry.getKey(), availableItemList)) continue;
+            entry.setValue(mat.get(prefix, stack.stackSize * 2));
         }
         // vanilla crafting
         CraftingManager.getInstance()
